@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Expense &amp; Budget Visualizer</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+
+    <!-- Global error banner -->
+    <div id="error-banner" class="error-banner" role="alert" aria-live="assertive" hidden>
+      <span id="error-banner-message"></span>
+      <button type="button" id="error-banner-close" aria-label="Dismiss error">&times;</button>
+    </div>
+
+    <!-- App header -->
+    <header class="app-header">
+      <h1 class="app-title">Expense &amp; Budget Visualizer</h1>
+      <div class="balance-container">
+        <h2 class="balance-label">Total Balance</h2>
+        <p id="balance-display" class="balance-amount">$0.00</p>
+      </div>
+    </header>
+
+    <main class="app-main">
+
+      <!-- Transaction input form -->
+      <section class="form-section" aria-labelledby="form-heading">
+        <h2 id="form-heading" class="section-heading">Add Expense</h2>
+
+        <form id="expense-form" class="expense-form" novalidate>
+
+          <div class="form-group">
+            <label for="item-name" class="form-label">Item Name</label>
+            <input
+              type="text"
+              id="item-name"
+              name="name"
+              class="form-input"
+              maxlength="100"
+              autocomplete="off"
+              aria-describedby="name-error"
+              placeholder="e.g. Lunch"
+            />
+            <span id="name-error" class="field-error" role="alert" aria-live="polite"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="item-amount" class="form-label">Amount ($)</label>
+            <input
+              type="number"
+              id="item-amount"
+              name="amount"
+              class="form-input"
+              min="0.01"
+              max="999999.99"
+              step="0.01"
+              autocomplete="off"
+              aria-describedby="amount-error"
+              placeholder="e.g. 12.50"
+            />
+            <span id="amount-error" class="field-error" role="alert" aria-live="polite"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="item-category" class="form-label">Category</label>
+            <select
+              id="item-category"
+              name="category"
+              class="form-select"
+              aria-describedby="category-error"
+            >
+              <option value="" disabled selected>Select a category</option>
+              <option value="Food">Food</option>
+              <option value="Transport">Transport</option>
+              <option value="Fun">Fun</option>
+            </select>
+            <span id="category-error" class="field-error" role="alert" aria-live="polite"></span>
+          </div>
+
+          <div class="form-group form-group--submit">
+            <span id="form-error" class="form-error" role="alert" aria-live="polite"></span>
+            <button type="submit" class="btn btn--primary">Add Transaction</button>
+          </div>
+
+        </form>
+      </section>
+
+      <!-- Transaction list -->
+      <section class="list-section" aria-labelledby="list-heading">
+        <h2 id="list-heading" class="section-heading">Transactions</h2>
+        <ul
+          id="transaction-list"
+          class="transaction-list"
+          aria-label="Transaction history"
+          aria-live="polite"
+        >
+          <!-- Populated by Renderer.renderList() -->
+          <li class="empty-state" id="empty-state-message">No transactions recorded yet.</li>
+        </ul>
+      </section>
+
+      <!-- Spending chart -->
+      <section class="chart-section" aria-labelledby="chart-heading">
+        <h2 id="chart-heading" class="section-heading">Spending by Category</h2>
+        <div class="chart-container">
+          <canvas id="chart-canvas" aria-label="Spending distribution pie chart" role="img"></canvas>
+          <p id="chart-placeholder" class="chart-placeholder">No spending data available.</p>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Chart.js 4.x via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+    <!-- App logic -->
+    <script src="js/app.js"></script>
+  </body>
+</html>

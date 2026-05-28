@@ -1,0 +1,478 @@
+/* ============================================================
+   Base Reset
+   ============================================================ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ============================================================
+   Typography & Root Variables
+   ============================================================ */
+:root {
+  /* Colors — all text/bg pairs meet WCAG 2.1 AA (≥ 4.5:1) */
+  --color-bg: #f5f7fa;
+  --color-surface: #ffffff;
+  --color-border: #d1d5db;
+  --color-text: #1f2937;          /* on white: ~14:1 */
+  --color-text-muted: #6b7280;    /* on white: ~4.6:1 */
+  --color-primary: #2563eb;       /* on white: ~5.9:1 */
+  --color-primary-hover: #1d4ed8;
+  --color-danger: #dc2626;        /* on white: ~5.1:1 */
+  --color-success: #16a34a;
+  --color-focus-ring: #2563eb;
+
+  /* Chart category colors */
+  --color-food: #f59e0b;
+  --color-transport: #3b82f6;
+  --color-fun: #8b5cf6;
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+
+  /* Typography */
+  --font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-size-body: 16px;         /* ≥ 14px requirement */
+  --font-size-small: 14px;
+  --font-size-heading-sm: 18px;   /* ≥ 18px requirement */
+  --font-size-heading-md: 22px;
+  --font-size-heading-lg: 28px;
+
+  --border-radius: 6px;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.10);
+}
+
+html {
+  font-size: var(--font-size-body);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-family);
+  font-size: var(--font-size-body);
+  line-height: 1.6;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  min-height: 100vh;
+}
+
+/* ============================================================
+   Focus Indicators — ≥ 2px outline (Req 7.3)
+   ============================================================ */
+:focus-visible {
+  outline: 3px solid var(--color-focus-ring);
+  outline-offset: 2px;
+  border-radius: var(--border-radius);
+}
+
+/* Remove default outline only when :focus-visible is supported */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ============================================================
+   Headings — ≥ 18px (Req 7.4)
+   ============================================================ */
+h1 {
+  font-size: var(--font-size-heading-lg);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: var(--font-size-heading-md);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+h3 {
+  font-size: var(--font-size-heading-sm);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+/* ============================================================
+   Global Error Banner
+   ============================================================ */
+.error-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  background-color: #fef2f2;
+  border-bottom: 2px solid var(--color-danger);
+  color: var(--color-danger);
+  font-size: var(--font-size-small);
+  font-weight: 500;
+}
+
+.error-banner[hidden] {
+  display: none;
+}
+
+.error-banner button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  line-height: 1;
+  color: var(--color-danger);
+  padding: 0 var(--space-xs);
+  flex-shrink: 0;
+}
+
+.error-banner button:hover {
+  opacity: 0.75;
+}
+
+/* ============================================================
+   App Header
+   ============================================================ */
+.app-header {
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  padding: var(--space-lg) var(--space-xl);
+  box-shadow: var(--shadow-sm);
+}
+
+.app-title {
+  color: var(--color-primary);
+  margin-bottom: var(--space-md);
+}
+
+.balance-container {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.balance-label {
+  font-size: var(--font-size-heading-sm);
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+
+.balance-amount {
+  font-size: var(--font-size-heading-lg);
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+/* ============================================================
+   Main Layout
+   ============================================================ */
+.app-main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: var(--space-xl) var(--space-md);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas:
+    "form    chart"
+    "list    list";
+  gap: var(--space-xl);
+}
+
+.form-section  { grid-area: form; }
+.chart-section { grid-area: chart; }
+.list-section  { grid-area: list; }
+
+/* ============================================================
+   Section Cards
+   ============================================================ */
+.form-section,
+.list-section,
+.chart-section {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.section-heading {
+  margin-bottom: var(--space-md);
+  color: var(--color-text);
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: var(--space-sm);
+}
+
+/* ============================================================
+   Expense Form
+   ============================================================ */
+.expense-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.form-group--submit {
+  margin-top: var(--space-sm);
+}
+
+.form-label {
+  font-size: var(--font-size-small);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.form-input,
+.form-select {
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  font-size: var(--font-size-body);
+  font-family: inherit;
+  color: var(--color-text);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  transition: border-color 0.15s ease;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.form-input:hover,
+.form-select:hover {
+  border-color: var(--color-primary);
+}
+
+.form-input:focus,
+.form-select:focus {
+  border-color: var(--color-primary);
+}
+
+/* Custom select arrow */
+.form-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236b7280' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+/* Field error state */
+.form-input[aria-invalid="true"],
+.form-select[aria-invalid="true"] {
+  border-color: var(--color-danger);
+}
+
+/* ============================================================
+   Field & Form Errors
+   ============================================================ */
+.field-error {
+  font-size: var(--font-size-small);
+  color: var(--color-danger);
+  min-height: 1.2em;
+  display: block;
+}
+
+.field-error:empty {
+  display: none;
+}
+
+.form-error {
+  font-size: var(--font-size-small);
+  color: var(--color-danger);
+  display: block;
+  margin-bottom: var(--space-xs);
+}
+
+.form-error:empty {
+  display: none;
+}
+
+/* ============================================================
+   Submit Button
+   ============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-sm) var(--space-lg);
+  font-size: var(--font-size-body);
+  font-family: inherit;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: background-color 0.15s ease, opacity 0.15s ease;
+  text-decoration: none;
+}
+
+.btn--primary {
+  background-color: var(--color-primary);
+  color: #ffffff;
+  width: 100%;
+}
+
+.btn--primary:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.btn--primary:active {
+  opacity: 0.9;
+}
+
+/* ============================================================
+   Transaction List
+   ============================================================ */
+.transaction-list {
+  list-style: none;
+  max-height: 400px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  /* Scrollbar styling */
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+
+.transaction-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.transaction-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.transaction-list::-webkit-scrollbar-thumb {
+  background-color: var(--color-border);
+  border-radius: 3px;
+}
+
+/* Individual transaction entry */
+.transaction-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-small);
+}
+
+.transaction-item__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.transaction-item__name {
+  font-weight: 600;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.transaction-item__meta {
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+.transaction-item__amount {
+  font-weight: 700;
+  color: var(--color-text);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.transaction-item__delete {
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  color: var(--color-danger);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 2px var(--space-sm);
+  flex-shrink: 0;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.transaction-item__delete:hover {
+  background-color: #fef2f2;
+  border-color: var(--color-danger);
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-small);
+  padding: var(--space-xl) var(--space-md);
+  font-style: italic;
+}
+
+/* ============================================================
+   Chart Section
+   ============================================================ */
+.chart-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 260px;
+}
+
+#chart-canvas {
+  max-width: 100%;
+  max-height: 260px;
+}
+
+.chart-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-small);
+  font-style: italic;
+  text-align: center;
+  padding: var(--space-md);
+}
+
+/* ============================================================
+   Responsive Layout
+   ============================================================ */
+@media (max-width: 640px) {
+  .app-header {
+    padding: var(--space-md);
+  }
+
+  .app-main {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "form"
+      "chart"
+      "list";
+    padding: var(--space-md) var(--space-sm);
+    gap: var(--space-md);
+  }
+
+  .balance-container {
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+}
