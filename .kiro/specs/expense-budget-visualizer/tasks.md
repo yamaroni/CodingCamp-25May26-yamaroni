@@ -16,7 +16,7 @@ Implement a fully client-side single-page web app using plain HTML, CSS, and Van
   - Ensure `index.html` links `css/styles.css` and `js/app.js`
   - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5, 7.3, 7.4_
 
-- [ ] 2. Implement `StorageService` and data models
+- [-] 2. Implement `StorageService` and data models
   - [-] 2.1 Implement `StorageService` with `load()` and `saveAll()` methods
     - `load()`: reads `localStorage["expense_transactions"]`, parses JSON, validates each record (name string, amount positive number, category in allowed set), discards corrupted records, returns clean `Transaction[]`
     - `saveAll(transactions)`: serializes array with `JSON.stringify` and writes to `localStorage`; wraps both operations in `try/catch` and throws `StorageError` with appropriate `type` (`'quota_exceeded'`, `'unavailable'`, `'parse_error'`) on failure

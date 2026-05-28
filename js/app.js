@@ -30,6 +30,7 @@ class StorageError extends Error {
   constructor(message, type) {
     super(message);
     this.name = 'StorageError';
+    /** @type {'quota_exceeded'|'unavailable'|'parse_error'} */
     this.type = type;
   }
 }
@@ -46,23 +47,125 @@ class StorageError extends Error {
 const StorageService = {
   STORAGE_KEY: 'expense_transactions',
 
+  /** Allowed category values. */
+  ALLOWED_CATEGORIES: ['Food', 'Transport', 'Fun'],
+
   /**
    * Reads and parses transactions from localStorage.
-   * Validates each record; discards corrupted entries.
+   * Validates each record; discards corrupted entries silently.
    * @returns {Transaction[]}
-   * @throws {StorageError}
+   * @throws {StorageError} with type 'unavailable' if localStorage is inaccessible,
+   *   or type 'parse_error' if the stored value is not valid JSON.
    */
   load() {
-    // Placeholder — implemented in Task 2
+    let raw;
+    try {
+      raw = localStorage.getItem(this.STORAGE_KEY);
+    } catch (err) {
+      throw new StorageError(
+        'localStorage is unavailable: ' + err.message,
+        'unavailable'
+      );
+    }
+
+    // Nothing stored yet — return empty array (not an error)
+    if (raw === null) {
+      return [];
+    }
+
+    let parsed;
+    try {
+      parsed = JSON.parse(raw);
+    } catch (err) {
+      throw new StorageError(
+        'Failed to parse stored transactions: ' + err.message,
+        'parse_error'
+      );
+    }
+
+    // Top-level value must be an array; if not, treat as corrupted → empty
+    if (!Array.isArray(parsed)) {
+      return [];
+    }
+
+    // Validate each record; discard any that fail validation
+    return parsed.filter((record) => this._isValidRecord(record));
   },
 
   /**
    * Serialises the full transactions array and writes it to localStorage.
    * @param {Transaction[]} transactions
-   * @throws {StorageError}
+   * @throws {StorageError} with type 'quota_exceeded' or 'unavailable' on failure.
    */
   saveAll(transactions) {
-    // Placeholder — implemented in Task 2
+    let serialized;
+    try {
+      serialized = JSON.stringify(transactions);
+    } catch (err) {
+      // Circular references or other serialisation failures
+      throw new StorageError(
+        'Failed to serialise transactions: ' + err.message,
+        'unavailable'
+      );
+    }
+
+    try {
+      localStorage.setItem(this.STORAGE_KEY, serialized);
+    } catch (err) {
+      // DOMException: QuotaExceededError (or similar names across browsers)
+      const isQuota =
+        err instanceof DOMException &&
+        (err.name === 'QuotaExceededError' ||
+          err.name === 'NS_ERROR_DOM_QUOTA_REACHED' ||
+          err.code === 22);
+
+      if (isQuota) {
+        throw new StorageError(
+          'localStorage quota exceeded.',
+          'quota_exceeded'
+        );
+      }
+      throw new StorageError(
+        'localStorage is unavailable: ' + err.message,
+        'unavailable'
+      );
+    }
+  },
+
+  /**
+   * Returns true if a record has all required fields with valid types and values.
+   * @param {*} record
+   * @returns {boolean}
+   * @private
+   */
+  _isValidRecord(record) {
+    if (record === null || typeof record !== 'object') return false;
+
+    // id — must be a non-empty string
+    if (typeof record.id !== 'string' || record.id.trim() === '') return false;
+
+    // name — non-empty string, max 100 chars
+    if (
+      typeof record.name !== 'string' ||
+      record.name.trim() === '' ||
+      record.name.length > 100
+    ) {
+      return false;
+    }
+
+    // amount — positive number, max 2 decimal places, range 0.01–999999.99
+    if (typeof record.amount !== 'number' || !isFinite(record.amount)) return false;
+    if (record.amount < 0.01 || record.amount > 999999.99) return false;
+    // Check max 2 decimal places by rounding and comparing
+    if (Math.round(record.amount * 100) / 100 !== record.amount) return false;
+
+    // category — must be one of the allowed values
+    if (!this.ALLOWED_CATEGORIES.includes(record.category)) return false;
+
+    // timestamp — must be a finite number (Unix ms)
+    if (typeof record.timestamp !== 'number' || !isFinite(record.timestamp)) return false;
+
+    return true;
   },
 };
 
