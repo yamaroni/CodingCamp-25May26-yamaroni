@@ -16,7 +16,7 @@ Implement a fully client-side single-page web app using plain HTML, CSS, and Van
   - Ensure `index.html` links `css/styles.css` and `js/app.js`
   - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5, 7.3, 7.4_
 
-- [-] 2. Implement `StorageService` and data models
+- [x] 2. Implement `StorageService` and data models
   - [-] 2.1 Implement `StorageService` with `load()` and `saveAll()` methods
     - `load()`: reads `localStorage["expense_transactions"]`, parses JSON, validates each record (name string, amount positive number, category in allowed set), discards corrupted records, returns clean `Transaction[]`
     - `saveAll(transactions)`: serializes array with `JSON.stringify` and writes to `localStorage`; wraps both operations in `try/catch` and throws `StorageError` with appropriate `type` (`'quota_exceeded'`, `'unavailable'`, `'parse_error'`) on failure
@@ -26,7 +26,7 @@ Implement a fully client-side single-page web app using plain HTML, CSS, and Van
 
 
 - [ ] 3. Implement `Validator`
-  - [~] 3.1 Implement `Validator` with `validateForm()`, `isValidAmount()`, `isValidName()`, and `isValidCategory()` methods
+  - [-] 3.1 Implement `Validator` with `validateForm()`, `isValidAmount()`, `isValidName()`, and `isValidCategory()` methods
     - `isValidName(value)`: returns `true` if non-empty string and ≤ 100 chars
     - `isValidAmount(value)`: returns `true` if parseable as a positive number, ≤ 999999.99, and has ≤ 2 decimal places
     - `isValidCategory(value)`: returns `true` if value is exactly `'Food'`, `'Transport'`, or `'Fun'`
